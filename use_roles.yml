@@ -1,0 +1,8 @@
+- name: Roles Demo
+  hosts: servera*
+  gather_facts: false
+
+  roles:
+    - role: webserver
+      webserver_content: "Bank Website Playbook File "
+

@@ -1,0 +1,21 @@
+print_floor: "Level 14 Play vars_files"
+
+users_dict:
+  Jiri: Pidrman
+  Adrian: Buzuleac
+  Achraf: HOUDANE
+
+users_simple_list:
+  - Jiri
+  - Adrian
+  - Achraf
+
+users_complex_list:
+  - fn: Jiri
+    ln: Pidrman
+  - fn: Adrian
+    ln: Buzuleac
+  - fn: Achraf
+    ln: HOUDANE
+
+nested_list: [11,[5,2, [4,[7, 6]],4], 8,1,[2, 10,7], 12]

@@ -1,0 +1,50 @@
+- name: Order Execution Roles Demo
+  hosts: servera*
+  gather_facts: true
+
+  pre_tasks:
+    - name: PRE TASK Check Pre Requisites
+      ansible.builtin.assert:
+        that:
+          - ansible_facts['memory_mb']['real']['free'] > 1000
+          - ansible_facts['architecture'] == "x86_64"
+        fail_msg: "Not Enough Memory or Wrong Architecture"
+        success_msg: "Good to Go"
+
+    - name: PRE TASK Ready to Make Changes
+      ansible.builtin.shell:
+        cmd: sleep 2
+      notify:
+        - services_down
+
+  roles:
+    - role: webserver
+      become: true
+      webserver_content: "Bank Website Playbook File "
+
+  tasks:
+    - name: sleep in tasks section
+      ansible.builtin.shell:
+        cmd: sleep 2
+      notify:
+        - extra_task_sleep_handler
+
+  post_tasks:
+    - name: POST TASK Changes Done
+      ansible.builtin.shell:
+        cmd: sleep 2
+      notify:
+        - services_up
+
+  handlers:
+    - name: extra_task_sleep_handler
+      ansible.builtin.debug:
+        msg: "SLEEP Handler in TASKS"
+
+    - name: services_down
+      ansible.builtin.debug:
+        msg: "Instgram Down SLeep NOW"
+
+    - name: services_up
+      ansible.builtin.debug:
+        msg: "Instagram UP Start Wasting Time"

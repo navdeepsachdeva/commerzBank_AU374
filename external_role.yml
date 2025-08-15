@@ -1,0 +1,7 @@
+- name: External Roles Demo
+  hosts: servera*
+  gather_facts: false
+
+  roles:
+    - role: edge.microshift.app
+

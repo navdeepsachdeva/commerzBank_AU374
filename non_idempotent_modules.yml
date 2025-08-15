@@ -1,0 +1,31 @@
+- name: Non Idempotent Modules Playbook
+  hosts: servera*
+  gather_facts: false
+  tasks:
+    # - name: Create file in /tmp folder GOOD
+    #   ansible.builtin.copy:
+    #     content: "Hello Jiri"
+    #     dest: /tmp/file1
+    #     mode: "0644"
+
+    - name: Install python Package
+      ansible.builtin.raw: dnf install -y python3
+
+    - name: Non Idempotent command Module
+      ansible.builtin.command:
+        cmd: tail -n 2 /etc/passwd
+
+    - name: Non Idempotent shell Module
+      ansible.builtin.shell:
+        cmd: tail -n 2 /etc/group
+
+    - name: Create file in /tmp folder BAD
+      ansible.builtin.shell:
+        cmd:  echo "Hello Jiri" > /tmp/file1
+
+    # - name: Open a Firewalld Port
+    #   ansible.posix.firewalld:
+    #     service: http
+    #     immediate: true
+    #     state: enabled
+    #     permanent: true

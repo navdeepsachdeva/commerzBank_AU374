@@ -1,0 +1,19 @@
+- name: Dynamic Groups Demo
+  hosts: all
+  gather_facts: true
+  tasks:
+    - name: Architecture
+      ansible.builtin.debug:
+        msg: "{{ ansible_architecture }}"
+
+    - name: Generate dynamic groups based on architecture
+      ansible.builtin.group_by:
+        key: arch_{{ ansible_facts['architecture'] }}
+
+- name: Dynamic Host Group Playbook
+  hosts: arch_x86_64
+  tasks:
+    - name: Architecture
+      ansible.builtin.debug:
+        msg: "I am {{ inventory_hostname }}"
+

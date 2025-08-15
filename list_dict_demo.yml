@@ -1,0 +1,39 @@
+- name: Filters Demo
+  hosts: servera*
+  gather_facts: false
+  vars_files:
+    - vars/outside_vars.yml
+  tasks:
+    - name: Print Simple List
+      ansible.builtin.debug:
+        msg: "{{ item }}"
+      # with_items: "{{ users_simple_list }}"
+      loop: "{{ users_simple_list }}"
+
+    - name: Print Complex List
+      ansible.builtin.debug:
+        msg: "{{ item.fn | lower }} -- {{ item.ln | lower }}"
+      # with_list: "{{ users_complex_list }}"
+      loop: "{{ users_complex_list }}"
+
+    - name: Print Simple Dict
+      ansible.builtin.debug:
+        msg: "{{ item.key }} ++++ {{ item.value }}"
+      # with_dict: "{{ users_dict }}"
+      loop: "{{ users_dict | dict2items }}"
+
+    - name: Print Simple Nested Dict
+      ansible.builtin.debug:
+        msg: "{{ item }}"
+      loop: "{{ nested_list | flatten | sort | unique }}"
+      # with_flattened: "{{ nested_list | sort | unique }}"
+
+    - name: Create Users
+      ansible.builtin.user:
+        name: "{{ item.key }}"
+        comment: "{{ item.key | capitalize }} ++++ {{ item.value | capitalize }}"
+        password: "{{ 'redhat123' | password_hash('sha512') }}"
+      loop: "{{ users_dict | dict2items }}"
+      become: true
+
+## Loop was introduced in Ansible 2.5

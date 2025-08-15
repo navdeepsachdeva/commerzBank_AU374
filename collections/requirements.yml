@@ -1,0 +1,9 @@
+collections:
+  - name: redhat.rhel_idm
+  - name: edge.microshift
+  - name: community.general
+  
+  - name: community.postgresql
+
+  - name: /home/student/Downloads/community-cassandra-1.4.0.tar.gz
+  - name: ansible.scm

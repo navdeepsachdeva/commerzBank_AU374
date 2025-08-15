@@ -1,0 +1,27 @@
+- name: Play Collect Facts
+  hosts: servera*
+  gather_facts: false
+  tasks:
+    - name: Collect Facts
+      ansible.builtin.setup:
+        gather_subset:
+          - '!all'
+          - 'min'
+          - 'network'
+          - 'hardware'
+    - name: Print Facts
+      ansible.builtin.debug:
+        msg: |
+          Time          = {{ ansible_facts.date_time.time }}
+          FQDN          = {{ ansible_facts['fqdn'] }}
+          Hostname      = {{ ansible_facts['hostname'] }}
+          IP Address    = {{ ansible_facts['default_ipv4']['address'] }}
+          VDA Size      = {{ ansible_facts['devices']['sda']['size'] }}
+
+- name: Play Reuse Facts
+  hosts: servera*
+  gather_facts: false
+  tasks:
+    - name: Print Facts
+      ansible.builtin.debug:
+        msg: "{{ ansible_facts['architecture'] }}"

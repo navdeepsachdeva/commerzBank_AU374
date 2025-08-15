@@ -1,0 +1,20 @@
+- name: Basic Playbook
+  hosts: servera*
+  gather_facts: false
+  tasks:
+    # - name: Create file in /tmp folder GOOD
+    #   ansible.builtin.copy:
+    #     content: "Hello Jiri"
+    #     dest: /tmp/file1
+
+    - name: Create file in /tmp folder BAD
+      ansible.builtin.shell:
+        cmd:  echo "Hello Jiri" > /tmp/file1
+    # - name: Open a Firewalld Port
+    #   ansible.posix.firewalld:
+    #     service: http
+    #     immediate: true
+    #     state: enabled
+    #     permanent: true
+
+

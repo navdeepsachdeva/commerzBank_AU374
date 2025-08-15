@@ -1,0 +1,27 @@
+namespace: commerzbank
+name: finance
+version: 1.0.0
+readme: README.md
+authors:
+- jiri <jiri@redhat.com>
+
+
+description: Custom Finance Commerzbank Collection
+
+license:
+- GPL-2.0-or-later
+
+license_file: ''
+
+tags: []
+
+dependencies:
+  community.general: '>=1.0.0'
+  ansible.posix: '>=1.0.0'
+  community.mysql: '>=3.14.0'
+
+repository: http://example.com/repository
+documentation: http://docs.example.com
+homepage: http://example.com
+issues: http://example.com/issue/tracker
+build_ignore: []

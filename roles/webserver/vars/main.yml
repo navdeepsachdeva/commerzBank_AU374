@@ -1,0 +1,3 @@
+---
+# vars file for ./roles/webserver
+webserver_content: "Bank Website First Page Vars Folder"

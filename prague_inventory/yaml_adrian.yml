@@ -1,0 +1,38 @@
+all:
+  hosts:
+    utility.lab.example.com: {}
+    aap.lab.example.com: {}
+  vars:
+    print_floor: "Level 3 Inventory file"
+
+control:
+  hosts:
+    workstation.lab.example.com: {}
+  vars:
+    remote_user: student
+
+dev:
+  hosts:
+    servera.lab.example.com: {}
+    serverb.lab.example.com:
+      print_floor: "Level 8 ServerB Inventory file"
+
+test:
+  hosts:
+    MYSQL_LONDON:
+      ansible_host: serverc.lab.example.com
+    DB_Prague:
+      ansible_host: serverd.lab.example.com
+  vars:
+    location: LONDON
+    user: JIRI
+
+
+prod:
+  hosts:
+    servere.lab.example.com: {}
+    serverf.lab.example.com: {}
+
+range:
+  hosts:
+    192.168.2.[1:4]: {}

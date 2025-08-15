@@ -1,0 +1,31 @@
+- name: Install Web Server
+  hosts: servera*
+  gather_facts: false
+  become: true
+  tasks:
+    - name: Install Web Package Bad Practise
+      ansible.builtin.dnf:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - httpd
+        - vsftpd
+
+    - name: Install Web Package Good Practise
+      ansible.builtin.dnf:
+        name:
+          - httpd
+          - vsftpd
+        state: present
+
+    - name: Start Web Service
+      ansible.builtin.service:
+        name: "{{ item }}"
+        state: restarted
+        enabled: true      
+        # name:
+        #   - httpd
+        #   - vsftpd
+      loop:
+        - httpd
+        - vsftpd

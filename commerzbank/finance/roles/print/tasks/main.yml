@@ -1,0 +1,12 @@
+---
+# tasks file for print
+
+- name: Sleep before Print
+  ansible.builtin.shell:
+    cmd: sleep 2
+  notify:
+    - print_sleep_handler
+
+- name: Print the value
+  ansible.builtin.debug:
+    msg: "{{ inventory_hostname }} = {{ print_floor }}"

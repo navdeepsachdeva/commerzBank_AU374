@@ -1,0 +1,87 @@
+- name: Filters Demo
+  hosts: servera*
+  gather_facts: false
+  vars_files:
+    - vars/outside_vars.yml
+    - vars/users.yml
+  tasks:
+    - name: Print Simple List
+      ansible.builtin.debug:
+        msg: "{{ item }}"
+      loop: "{{ lookup('ansible.builtin.list', users_simple_list) }}"
+      # with_items: "{{ users_simple_list }}"
+      # loop: "{{ users_simple_list }}"
+
+    - name: Print Complex List
+      ansible.builtin.debug:
+        msg: "{{ item.fn | lower }} -- {{ item.ln | lower }}"
+      loop: "{{ lookup('ansible.builtin.list', users_complex_list) }}"
+      # with_list: "{{ users_complex_list }}"
+      # loop: "{{ users_complex_list }}"
+
+    - name: Print Simple Dict
+      ansible.builtin.debug:
+        msg: "{{ item.key }} ++++ {{ item.value }}"
+      loop: "{{ lookup('ansible.builtin.dict', users_dict) }}"
+      # with_dict: "{{ users_dict }}"
+      # loop: "{{ users_dict | dict2items }}"
+
+    - name: Print Simple Nested Dict
+      ansible.builtin.debug:
+        msg: "{{ item }}"
+      loop: "{{ lookup('community.general.flattened', nested_list) | sort | unique }}"
+      # loop: "{{ nested_list | flatten | sort | unique }}"
+      # with_flattened: "{{ nested_list | sort | unique }}"
+
+    - name: Print Sequence 
+      ansible.builtin.debug:
+        # msg: "{{ query('ansible.builtin.sequence', 'start=0 end=4') }}"
+        msg: "{{ item }}"
+      loop: "{{ q('ansible.builtin.sequence', 'start=0 end=4 format=eth%x') }}"
+      # with_sequence: start=0 end=4 format=eth%x
+
+    - name: Print Content of Folder fileglob
+      ansible.builtin.debug:
+        msg: "{{ item }}"
+      loop: "{{ query('ansible.builtin.fileglob', 'prague_inventory/*') }}"
+      # with_fileglob:
+      #   - "prague_inventory/*"
+
+    - name: Print ENV 
+      ansible.builtin.debug:
+        msg: "{{ item }}"
+      loop: "{{ query('ansible.builtin.env', 'HOME','USER') }}"
+      # with_env:
+      #   - '$PS1'
+      #   - '$SHELL'
+      #   - '$HOME'
+    - name: Print Content of File 
+      ansible.builtin.debug:
+        msg: "{{ item }}"
+      loop: "{{ query('ansible.builtin.file', '/etc/passwdd', errors='warn') }}"
+
+    - name: Print Content of File Line by Line
+      ansible.builtin.debug:
+        msg: "{{ item }}"
+      loop: "{{ query('ansible.builtin.lines', 'cat /etc/passwd') }}"
+
+    - name: Loop with sublist subelements
+      ansible.builtin.debug:
+        msg: "{{ item[1] }} ~~ {{ item[0].name }}"
+      loop: "{{ query('ansible.builtin.subelements', users, 'mysql.hosts') }}"
+      # with_subelements:
+      #   - "{{ users }}"
+      #   - mysql.hosts
+        # - authorized
+
+    - name: Create Users
+      ansible.builtin.user:
+        name: "{{ item.key }}"
+        comment: "{{ item.key | capitalize }} ++++ {{ item.value | capitalize }}"
+        password: "{{ lookup('ansible.builtin.password', './passwords/{{ item.key }}.txt chars=ascii_letters length=10 encrypt=sha512_crypt') }}"
+        # password: "{{ 'redhat123' | password_hash('sha512') }}"
+      loop: "{{ users_dict | dict2items }}"
+      become: true
+
+## Loop was introduced in Ansible 2.5
+## loop only Accept List

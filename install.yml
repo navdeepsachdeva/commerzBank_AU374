@@ -1,0 +1,29 @@
+- name: Install Web Server
+  hosts: servera*
+  gather_facts: false
+  become: true
+  tasks:
+    # WebServer/ FTP/ Security/ Database
+    - name: Install Web Package
+      ansible.builtin.dnf:
+        name: httpd
+        state: present
+
+    - name: Deploy Web app
+      ansible.builtin.copy:
+        content: "Website First Page"
+        dest: /var/www/html/index.html
+        mode: 0644
+
+    - name: Open Firewall Port
+      ansible.posix.firewalld:
+        service: http
+        permanent: true
+        state: enabled
+        immediate: true
+
+    - name: Start Web Service
+      ansible.builtin.service:
+        name: httpd
+        state: started
+        enabled: true

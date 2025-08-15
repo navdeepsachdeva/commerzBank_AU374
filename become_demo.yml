@@ -1,0 +1,62 @@
+- name: Install Web Server
+  hosts: servera*
+  gather_facts: true
+  become: false
+  tasks:
+    - name: Task 1 Outside Block
+      ansible.builtin.debug:
+        msg: "Task 1 Outside Block CHILL"
+
+    - name: Block for Web Server Tasks
+      when: ansible_distribution == "RedHat"
+      become: true
+      block:
+        - name: Install Web Package
+          ansible.builtin.dnf:
+            name: httpd
+            state: present
+
+        - name: Deploy Web app
+          ansible.builtin.copy:
+            content: "Website First Page"
+            dest: /var/wwww/html/index.html
+            mode: "0644"
+
+        - name: Start Web Service
+          ansible.builtin.service:
+            name: httpd
+            state: started
+            enabled: true
+      rescue:
+        - name: Roll Back Everything
+          ansible.builtin.debug:
+            msg: "Going Back to Last Known Good Config"
+          become: false
+
+        - name: Undeploy Web app
+          ansible.builtin.shell:
+            cmd: rm -rf /var/www/html/*
+
+        - name: Uninstall Web Package
+          ansible.builtin.dnf:
+            name: httpd
+            state: absent
+            autoremove: true
+
+      always:
+        - name: Inform Stakeholders
+          ansible.builtin.debug:
+            msg: "FYI Only"
+
+
+    - name: Task 2 Outside Block
+      ansible.builtin.debug:
+        msg: "Task 2 Outside Block CHILL"
+
+    - name: Open Firewall Port
+      ansible.posix.firewalld:
+        service: http
+        permanent: true
+        state: enabled
+        immediate: true
+      become: true

@@ -1,0 +1,34 @@
+utility.lab.example.com
+aap.lab.example.com
+
+## INI Format =
+
+[all:vars]
+print_floor="Level 3 Inventory file"
+
+[control]
+workstation.lab.example.com
+
+[control:vars]
+remote_user=student
+
+[dev]
+servera.lab.example.com
+# 172.25.250.11
+serverb.lab.example.com print_floor="Level 8 ServerB Inventory file"
+
+[test]
+# 172.25.250.12
+# serverc.lab.example.com
+# serverd.lab.example.com
+MYSQL_LONDON ansible_host=serverc.lab.example.com
+DB_Prague ansible_host=serverd.lab.example.com
+
+[test:vars]
+location=LONDON
+user=JIRI
+
+[prod]
+172.25.250.10
+servere.lab.example.com
+serverf.lab.example.com

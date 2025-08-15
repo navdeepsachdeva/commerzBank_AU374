@@ -1,0 +1,31 @@
+---
+# tasks file for ./roles/webserver
+
+- name: RUN all handlers invoked so FAR
+  ansible.builtin.meta: flush_handlers
+
+- name: Install Web Package
+  ansible.builtin.dnf:
+    name: "{{ webserver_package }}"
+    state: present   
+  notify:            
+    - Package Installed
+    - Restart Web Service
+                     
+- name: Deploy Web app
+  ansible.builtin.copy:
+    content: "{{ webserver_content }}"
+    dest: /var/www/html/{{ webserver_index }}
+    mode: "0644"     
+  notify:            
+    - Restart Web Service
+    - App Deployed
+
+- name: Collect Info of {{ inventory_hostname }}
+  ansible.builtin.template:
+    src: collection_info.j2
+    dest: /var/www/html/info.html
+  notify:                        
+    - Restart Web Service        
+    - System Info Collected
+

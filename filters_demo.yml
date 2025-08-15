@@ -1,0 +1,23 @@
+- name: Filters Demo
+  hosts: servera*
+  gather_facts: false
+  vars:
+    myvar: "you must decide which module keys"
+    mylist: [11,5,2, 4,7, 6,4, 8,1,2, 10,7, 12]
+    nested_list: [11,[5,2, [4,[7, 6]],4], 8,1,[2, 10,7], 12]
+  tasks:
+    - name: Print
+      ansible.builtin.debug:
+        msg: |
+          Whenever you use a module,
+          {{ ( myvar | upper | length ) +10 }} to use task. You can 
+          {{ 'manually' | capitalize | ansible.builtin.hash }} specify
+          {{ 'values' | upper }} for the keys
+          {{ ourvar | default('not available') | capitalize }}
+          {{ mylist | unique | sort | sum }}
+
+    - name: Print Nested List
+      ansible.builtin.debug:
+        msg: "eth{{ item }}"
+      loop: "{{ nested_list | flatten | unique | sort }}"
+        # msg: "{{ nested_list | flatten | unique | sort }}"

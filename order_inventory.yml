@@ -1,0 +1,19 @@
+- name: Order Execution Roles Demo
+  hosts: all
+  serial: 1
+  gather_facts: true
+  order: sorted
+
+  tasks:
+    - name: PRE TASK Check Pre Requisites
+      ansible.builtin.assert:
+        that:
+          - ansible_facts['memory_mb']['real']['free'] > 100
+          - ansible_facts['architecture'] == "x86_64"
+        fail_msg: "Not Enough Memory or Wrong Architecture"
+        success_msg: "Good to Go"
+
+    - name: sleep in tasks section
+      ansible.builtin.shell:
+        cmd: sleep 1
+

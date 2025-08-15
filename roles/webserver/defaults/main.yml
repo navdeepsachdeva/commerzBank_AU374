@@ -1,0 +1,7 @@
+---
+# defaults file for ./roles/webserver
+
+webserver_package: httpd
+webserver_service: httpd
+webserver_content: "Bank Website First Page Defaults Folder"
+webserver_index: index.html

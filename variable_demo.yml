@@ -1,0 +1,59 @@
+- name: Variable Demo
+  hosts: dev,test
+  gather_facts: true
+
+  # Bad Practise Hardcore Vars
+  vars:
+    print_floor: "Level 12 Play Vars"
+
+  # Development Level Only
+  vars_prompt:
+    - name: print_floor
+      prompt: "Enter your Level"
+      private: false
+
+  # Static Import of Variable File
+  vars_files:
+    - ./vars/outside_vars.yml
+  roles:
+    - role: print
+
+  tasks:
+    - name: Dynamic Import of Variable File
+      ansible.builtin.include_vars:
+        file: ./vars/external_vars.yml
+      when: meme_var is not defined
+
+    - name: Set the Fact
+      ansible.builtin.set_fact:
+        print_floor: "Level 19 Registered vars and set_facts"
+      
+    - name: Run the Role Based on Condition
+      ansible.builtin.include_role:
+        name: print
+      vars:
+        print_floor: "Level 20 Role (and include_role) params"
+      when: meme_var is not defined
+
+
+    - name: Task 1 Outside Block
+      ansible.builtin.debug:
+        msg: "{{ inventory_hostname }} ++ {{ print_floor }} {{ MYSQL_USER }}"
+
+    - name: Block of Tasks
+      vars:
+        print_floor: "Level 16 Block vars"
+      block:
+        - name: Task 2 Inside Block
+          vars:
+            print_floor: "Level 17 Task vars"
+          ansible.builtin.debug:
+            msg: "{{ inventory_hostname }} ++ {{ print_floor }}"
+
+        - name: Task 3 Inside Block
+          ansible.builtin.debug:
+            msg: "{{ inventory_hostname }} ++ {{ print_floor }}"
+
+    - name: Task 4 Outside Block
+      ansible.builtin.debug:
+        msg: "{{ inventory_hostname }} ++ {{ print_floor }}"

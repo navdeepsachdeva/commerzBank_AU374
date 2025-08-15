@@ -1,0 +1,6 @@
+collections:
+  # - name: commerzbank.finance
+  #   source: https://aap.lab.example.com/api/galaxy/content/validated/
+  - name: /build/commerzbank-finance-1.0.0.tar.gz
+    type: file
+  - name: community.crypto

@@ -1,0 +1,58 @@
+- name: Dependency Task Handlers
+  hosts: servera*
+  gather_facts: false
+  vars:
+    package: httpd
+    service: httpd
+    content: "Bank Website First Page"
+    webport: http
+    index: index.html
+  tasks:
+    - name: Install Web Package
+      ansible.builtin.dnf:
+        name: "{{ package }}"
+        state: present
+      notify:
+        - Package Installed
+        - Restart Web Service
+
+    - name: Deploy Web app
+      ansible.builtin.copy:
+        content: "{{ content }}"
+        dest: /var/www/html/{{ index }}
+        mode: "0644"
+      notify:
+        - Restart Web Service
+        - App Deployed
+
+    - name: Open Firewall Port
+      ansible.posix.firewalld:
+        service: "{{ webport }}"
+        permanent: true
+        state: enabled
+        immediate: true
+      notify:
+        - Web Port Opened
+
+  handlers:
+    - name: Extra Dependency Task
+      ansible.builtin.debug:
+        msg: "No One interested in ME"
+
+    - name: Web Port Opened
+      ansible.builtin.debug:
+        msg: "Web Port Opened Successfully"
+
+    - name: App Deployed
+      ansible.builtin.debug:
+        msg: "App Deployed Successfully"
+
+    - name: Package Installed
+      ansible.builtin.debug:
+        msg: "Package Installed Successfully"
+
+    - name: Restart Web Service
+      ansible.builtin.service:
+        name: "{{ service }}"
+        state: restarted
+        enabled: true

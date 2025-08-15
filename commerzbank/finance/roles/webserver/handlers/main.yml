@@ -1,0 +1,40 @@
+---
+# handlers file for ./roles/webserver
+
+- name: App Deployed
+  ansible.builtin.debug:
+    msg: "App Deployed Successfully"
+
+- name: App Deployed 1
+  ansible.builtin.debug:
+    msg: "App 1 Deployed Successfully"
+  listen: App Deployed
+
+- name: App Deployed 2
+  ansible.builtin.debug:
+    msg: "App 2 Deployed Successfully"
+  listen: App Deployed
+
+- name: App Deployed 3
+  ansible.builtin.debug:
+    msg: "App 3 Deployed Successfully"
+  listen: App Deployed
+
+- name: App Deployed 4
+  ansible.builtin.debug:
+    msg: "App 4 Deployed Successfully"
+  listen: App Deployed
+
+- name: System Info Collected
+  ansible.builtin.debug:
+    msg: "System Info Collected via template"
+    
+- name: Package Installed
+  ansible.builtin.debug:
+    msg: "Package Installed Successfully"
+
+- name: Restart Web Service
+  ansible.builtin.service:
+    name: "{{ webserver_service }}"
+    state: restarted
+    enabled: true

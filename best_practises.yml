@@ -1,0 +1,31 @@
+- name: Install Web Server
+  hosts: servera*
+  gather_facts: false
+  tasks:
+    # - name: Install Web Package BAD INI
+    #   ansible.builtin.dnf: name=httpd state=present
+
+    # Always write in YAML Format
+    - name: Install Web Package GOOD YAML
+      ansible.builtin.dnf:
+        name: httpd
+        state: present
+
+    - name: Deploy Web app
+      ansible.builtin.copy:
+        content: "Website First Page"
+        dest: /var/www/html/index.html
+        mode: "0444"
+
+    - name: Open Firewall Port
+      ansible.posix.firewalld:
+        service: http
+        permanent: true
+        state: enabled
+        immediate: true
+
+    - name: Start Web Service
+      ansible.builtin.service:
+        name: httpd
+        state: started
+        enabled: true
